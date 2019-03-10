@@ -24,8 +24,40 @@ void RoboCatClient::HandleDying()
 
 void RoboCatClient::Update()
 {
-	//for now, we don't simulate any movement on the client side
-	//we only move when the server tells us to move
+	
+}
+void RoboCatClient::PredictLocalCat(uint32_t inReadState)
+{
+	if ((inReadState & ECRS_Pose) != 0)
+	{
+		const MoveList& list = InputManager::sInstance->GetMoveList();
+		for (const Move& move : list)
+		{
+			float deltaTime = move.GetDeltaTime();
+			ProcessInput(deltaTime, move.GetInputState());
+			SimulateMovement(deltaTime);
+		}
+	}
+}
+void RoboCatClient::PredictRemoteCat(uint32_t inReadState) 
+{
+	if ((inReadState & ECRS_Pose) != 0)
+	{
+		float rtt = NetworkManagerClient::sInstance->GetRoundTripTime();
+		while (true)
+		{
+			if (rtt < 1.f / 30.f)
+			{
+				SimulateMovement(rtt);
+				break;
+			}
+			else 
+			{
+				SimulateMovement(1.f / 30.f);
+				rtt -= 1.f / 30.f;
+			}
+		}
+	}
 }
 
 void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
@@ -122,5 +154,15 @@ void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
 		{
 			HUD::sInstance->SetPlayerShield(mShield);
 		}
+	}
+
+	bool isLocal = (GetPlayerId() == NetworkManagerClient::sInstance->GetPlayerId());
+	if (isLocal)
+	{
+		PredictLocalCat(readState);
+	}
+	else
+	{
+		PredictRemoteCat(readState);
 	}
 }

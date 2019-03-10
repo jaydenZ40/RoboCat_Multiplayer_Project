@@ -10,7 +10,8 @@ public:
 
 protected:
 	RoboCatClient();
-
+	void			PredictLocalCat(uint32_t inReadState);
+	void			PredictRemoteCat(uint32_t inReadState);
 
 private:
 	float				mTimeLocationBecameOutOfSync;

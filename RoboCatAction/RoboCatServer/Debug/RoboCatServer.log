@@ -1,13 +1,24 @@
-﻿  RoboCatServer.vcxproj -> C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\Debug\RoboCatServer.exe
+﻿  RoboCatServerPCH.cpp
+  ClientProxy.cpp
+  MouseServer.cpp
+  NetworkManagerServer.cpp
+  ReplicationManagerServer.cpp
+  RoboCatServer.cpp
+  Server.cpp
+  ServerMain.cpp
+  ShieldServer.cpp
+  YarnServer.cpp
+  Generating Code...
+  RoboCatServer.vcxproj -> C:\Users\nocof\Desktop\RoboCatAction\Debug\RoboCatServer.exe
   Copying SDL DLLs...
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libfreetype-6.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libogg-0.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libpng16-16.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libvorbis-0.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libvorbisfile-3.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_image.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_mixer.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_ttf.dll
-  C:\Users\jiapeng\Documents\GitHub\RoboCat_Multiplayer_Project\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\zlib1.dll
-  复制了 10 个文件
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libfreetype-6.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libogg-0.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libpng16-16.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libvorbis-0.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\libvorbisfile-3.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_image.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_mixer.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\SDL2_ttf.dll
+  C:\Users\nocof\Desktop\RoboCatAction\RoboCatServer\\..\SDL\lib\win\x86\zlib1.dll
+  10 File(s) copied

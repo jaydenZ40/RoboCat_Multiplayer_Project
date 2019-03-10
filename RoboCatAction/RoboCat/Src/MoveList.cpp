@@ -22,6 +22,19 @@ bool MoveList::AddMove( const Move& inMove )
 	return true;
 }
 
+bool MoveList::AddNewMove(const Move& inMove)
+{
+	float timeStamp = inMove.GetTimestamp();
+	if (timeStamp > mLastMoveTimestamp)
+	{
+		float deltaTime = mLastMoveTimestamp >= 0.f ? timeStamp - mLastMoveTimestamp : 0.f;
+		mLastMoveTimestamp = timeStamp;
+		mMoves.emplace_back(inMove.GetInputState(), timeStamp, deltaTime);
+		return true;
+	}
+	else return false;
+}
+
 void	MoveList::RemovedProcessedMoves( float inLastMoveProcessedOnServerTimestamp )
 {
 	while( !mMoves.empty() && mMoves.front().GetTimestamp() <= inLastMoveProcessedOnServerTimestamp )
