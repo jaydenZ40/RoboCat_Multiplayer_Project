@@ -20,5 +20,6 @@ private:
 
 	bool	InitNetworkManager();
 	void	SetupWorld();
+	bool	isFirstPlayer = true;
 
 };

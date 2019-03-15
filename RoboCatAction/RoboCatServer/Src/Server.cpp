@@ -87,7 +87,7 @@ void Server::SetupWorld()
 	//spawn more random mice!
 	CreateRandomMice( 10 );
 
-	CreateRandomShield(1);
+	//CreateRandomShield(1);
 }
 
 void Server::DoFrame()
@@ -120,7 +120,12 @@ void Server::SpawnCatForPlayer( int inPlayerId )
 	cat->SetPlayerId( inPlayerId );
 	//gotta pick a better spawn location than this...
 	cat->SetLocation( Vector3( 1.f - static_cast< float >( inPlayerId ), 0.f, 0.f ) );
-
+	
+	if (!isFirstPlayer)	// don't create shield for joining of first player
+	{
+		CreateRandomShield(1);	// create a shield each time a player join or respawn
+	}
+	isFirstPlayer = false;
 }
 
 void Server::HandleLostClient( ClientProxyPtr inClientProxy )
