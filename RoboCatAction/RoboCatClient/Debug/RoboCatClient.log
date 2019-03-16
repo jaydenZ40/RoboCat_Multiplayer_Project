@@ -1,6 +1,4 @@
-﻿  InputManager.cpp
-  RoboCatClient.cpp
-  正在生成代码...
+﻿  RoboCatClient.cpp
   RoboCatClient.vcxproj -> C:\Users\jiapeng\Desktop\RoboCatAction\Debug\RoboCatClient.exe
   Copying SDL DLLs...
   C:\Users\jiapeng\Desktop\RoboCatAction\RoboCatClient\\..\SDL\lib\win\x86\libfreetype-6.dll

@@ -27,8 +27,8 @@ void RoboCatClient::Update()
 	{
 		// Problem here! cannot figure out how to get the simulate time, maybe fixed timestep will help 
 
-		//float deltaTime = Timing::sInstance.GetTimef() - InputManager::sInstance->GetNextTimeToSampleInput();
-		float deltaTime = 0.03f / 2; // kTimeBetweenInputSamples
+		//float deltaTime =  - Timing::sInstance.GetTimef() + InputManager::sInstance->GetNextTimeToSampleInput();
+		float deltaTime = 0.016f; // kTimeBetweenInputSamples
 		//float deltaTime = Timing::sInstance.GetDeltaTime();
 		ProcessInput(deltaTime, InputManager::sInstance->GetState());
 		SimulateMovement(deltaTime);
@@ -42,10 +42,11 @@ void RoboCatClient::PredictLocalCat(uint32_t inReadState, float oldRotation, Vec
 	{
 		const MoveList& list = InputManager::sInstance->GetMoveList();
 
-		for (int i = 0; i < list.GetMoveCount(); i++)
+		if (!mIsAuthority)// different from the unauthorized state, back to previous location and re-process inputs
 		{
-			if (!mIsAuthority)// different from the unauthorized state, back to previous location and re-process inputs
+			for (int i = 0; i < list.GetMoveCount(); i++)
 			{
+
 				SetRotation(oldRotation);
 				SetLocation(oldLocation);
 				SetVelocity(oldVelocity);
