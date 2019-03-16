@@ -15,7 +15,8 @@ RoboCat::RoboCat() :
 	mPlayerId( 0 ),
 	mIsShooting( false ),
 	mHealth( 10 ),
-	mShield( 0 )
+	mShield( 0 ),
+	mIsAuthority(false)
 {
 	SetCollisionRadius( 0.5f );
 }
@@ -34,7 +35,6 @@ void RoboCat::ProcessInput( float inDeltaTime, const InputState& inInputState )
 
 
 	mIsShooting = inInputState.IsShooting(); 
-
 }
 
 void RoboCat::AdjustVelocityByThrust( float inDeltaTime )
@@ -251,7 +251,7 @@ uint32_t RoboCat::Write( OutputMemoryBitStream& inOutputStream, uint32_t inDirty
 	if (inDirtyState & ECRS_Shield)
 	{
 		inOutputStream.Write((bool)true);
-		inOutputStream.Write(mShield, 4);	// why 4 for mHealth?
+		inOutputStream.Write(mShield, 4);
 
 		writtenState |= ECRS_Shield;
 	}
@@ -261,8 +261,11 @@ uint32_t RoboCat::Write( OutputMemoryBitStream& inOutputStream, uint32_t inDirty
 	}
 	
 
-
+	inOutputStream.Write(mIsAuthority);
 	
+	
+
+
 
 	return writtenState;
 	

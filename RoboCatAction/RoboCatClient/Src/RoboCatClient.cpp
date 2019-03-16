@@ -1,10 +1,10 @@
 #include <RoboCatClientPCH.h>
 
 
-
 RoboCatClient::RoboCatClient() :
 	mTimeLocationBecameOutOfSync( 0.f ),
-	mTimeVelocityBecameOutOfSync( 0.f )
+	mTimeVelocityBecameOutOfSync( 0.f ),
+	mReceiveAuthoritiedNumber(NULL)
 {
 	mSpriteComponent.reset( new SpriteComponent( this ) );
 	mSpriteComponent->SetTexture( TextureManager::sInstance->GetTexture( "cat" ) );
@@ -21,44 +21,61 @@ void RoboCatClient::HandleDying()
 	}
 }
 
-
 void RoboCatClient::Update()
 {
-	
+	if (GetPlayerId() == NetworkManagerClient::sInstance->GetPlayerId() && mIsAuthority)
+	{
+		// Problem here! cannot figure out how to get the simulate time, maybe fixed timestep will help 
+
+		//float deltaTime = Timing::sInstance.GetTimef() - InputManager::sInstance->GetNextTimeToSampleInput();
+		float deltaTime = 0.03f / 2; // kTimeBetweenInputSamples
+		//float deltaTime = Timing::sInstance.GetDeltaTime();
+		ProcessInput(deltaTime, InputManager::sInstance->GetState());
+		SimulateMovement(deltaTime);
+
+	}
 }
-void RoboCatClient::PredictLocalCat(uint32_t inReadState)
+
+void RoboCatClient::PredictLocalCat(uint32_t inReadState, float oldRotation, Vector3 oldLocation, Vector3 oldVelocity)
 {
 	if ((inReadState & ECRS_Pose) != 0)
 	{
 		const MoveList& list = InputManager::sInstance->GetMoveList();
-		for (const Move& move : list)
+
+		for (int i = 0; i < list.GetMoveCount(); i++)
 		{
-			float deltaTime = move.GetDeltaTime();
-			ProcessInput(deltaTime, move.GetInputState());
-			SimulateMovement(deltaTime);
+			if (!mIsAuthority)// different from the unauthorized state, back to previous location and re-process inputs
+			{
+				SetRotation(oldRotation);
+				SetLocation(oldLocation);
+				SetVelocity(oldVelocity);
+
+				float deltaTime = list[i].GetDeltaTime();
+				ProcessInput(deltaTime, list[i].GetInputState());
+				SimulateMovement(deltaTime);
+			}
 		}
+
+		mLastMoveTimestamp = Timing::sInstance.GetTimef();
+
+		mIsAuthority = true;
 	}
 }
-void RoboCatClient::PredictRemoteCat(uint32_t inReadState) 
+
+void RoboCatClient::PredictRemoteCat(uint32_t inReadState, float oldRotation, Vector3 oldLocation, Vector3 oldVelocity)
 {
 	if ((inReadState & ECRS_Pose) != 0)
 	{
-		float rtt = NetworkManagerClient::sInstance->GetRoundTripTime();
-		while (true)
+		float intervalTime = mTimeBeInterpolated;
+		while (intervalTime > 0)
 		{
-			if (rtt < 1.f / 30.f)
-			{
-				SimulateMovement(rtt);
-				break;
-			}
-			else 
-			{
-				SimulateMovement(1.f / 30.f);
-				rtt -= 1.f / 30.f;
-			}
+			InterpolateMovement(oldRotation, oldLocation, oldVelocity);
+			intervalTime -= Timing::sInstance.GetDeltaTime();
+
 		}
 	}
 }
+
 
 void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
 {
@@ -156,13 +173,33 @@ void RoboCatClient::Read( InputMemoryBitStream& inInputStream )
 		}
 	}
 
+	inInputStream.Read(mIsAuthority);
+
+	mTimeBeInterpolated = Timing::sInstance.GetTimef() - mTimeReceivedLastPacket;
+	mTimeReceivedLastPacket = Timing::sInstance.GetTimef();
+
 	bool isLocal = (GetPlayerId() == NetworkManagerClient::sInstance->GetPlayerId());
 	if (isLocal)
 	{
-		PredictLocalCat(readState);
+		PredictLocalCat(readState, oldRotation, oldLocation, oldVelocity);
 	}
 	else
 	{
-		PredictRemoteCat(readState);
+		PredictRemoteCat(readState, oldRotation, oldLocation, oldVelocity);
 	}
+}
+
+void RoboCatClient::InterpolateMovement(float oldRotation, Vector3 oldLocation, Vector3 oldVelocity)
+{
+	Vector3 interpolateVelocity;
+	float interpolateRotation;
+	interpolateVelocity.mX = (GetLocation().mX - oldLocation.mX) / mTimeBeInterpolated;
+	interpolateVelocity.mY = (GetLocation().mY - oldLocation.mY) / mTimeBeInterpolated;
+	interpolateVelocity.mZ = (GetLocation().mZ - oldLocation.mZ) / mTimeBeInterpolated;
+	interpolateRotation = (GetRotation() - oldRotation) / mTimeBeInterpolated;
+
+	SetLocation(oldLocation + interpolateVelocity * Timing::sInstance.GetDeltaTime());
+	SetRotation(oldRotation + interpolateRotation * Timing::sInstance.GetDeltaTime());
+
+	ProcessCollisions();
 }

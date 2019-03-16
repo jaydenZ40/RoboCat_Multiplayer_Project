@@ -14,6 +14,7 @@ public:
 	MoveList&			GetMoveList()		{ return mMoveList; }
 
 	const Move*			GetAndClearPendingMove()	{ auto toRet = mPendingMove; mPendingMove = nullptr; return toRet; }
+	float				GetNextTimeToSampleInput() { return mNextTimeToSampleInput; }
 
 	void				Update();
 

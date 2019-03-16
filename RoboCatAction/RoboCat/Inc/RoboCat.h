@@ -67,9 +67,9 @@ protected:
 	float				mThrustDir;
 	int					mHealth;
 	int					mShield;
+	bool				mIsAuthority;
 
 	bool				mIsShooting;
-
 	
 
 

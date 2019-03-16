@@ -83,7 +83,7 @@ void InputManager::HandleInput( EInputAction inInputAction, int inKeyCode )
 			break;
 		}
 	}
-
+	mNextTimeToSampleInput = Timing::sInstance.GetTimef();
 }
 
 
